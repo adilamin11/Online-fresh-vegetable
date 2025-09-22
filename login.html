@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {font-family: Arial; background:#f2f2f2;}
+    .box {width: 300px; margin: 100px auto; padding:20px; background:white; border-radius:10px; box-shadow:0 0 6px #aaa;}
+    input {width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:6px;}
+    button {width:100%; padding:10px; background:blue; color:white; border:none; border-radius:6px; cursor:pointer;}
+    button:hover {background:darkblue;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Customer Login</h2>
+    <input type="text" id="username" placeholder="Enter username" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button onclick="login()">Login</button>
+    <p>New user? <a href="register.html">Register</a></p>
+  </div>
+
+  <script>
+  function login(){
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value.trim();
+
+    let savedUser = localStorage.getItem("username");
+    let savedPass = localStorage.getItem("password");
+
+    if(user === savedUser && pass === savedPass){
+      alert("✅ Login successful!");
+      localStorage.setItem("isLoggedIn", "true");
+      window.location.href = "home.html"; // redirect to home
+    } else {
+      alert("❌ Invalid credentials!");
+    }
+  }
+  </script>
+</body>
+</html>

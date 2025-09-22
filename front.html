@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vegetable Order System</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { padding: 8px; margin: 5px 0; width: 250px; }
+    button { padding: 10px 20px; margin: 10px 0; cursor: pointer; }
+    #authModal { 
+      display:none; 
+      position: fixed; 
+      top: 50%; left: 50%; 
+      transform: translate(-50%, -50%); 
+      background: #fff; 
+      padding: 20px; 
+      border: 2px solid green; 
+      z-index: 1000;
+    }
+    #overlay { 
+      display:none; 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.5); 
+      z-index: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cart & Delivery Form -->
+  <h2>🥦 Place Your Order</h2>
+  <input type="text" id="custName" placeholder="Enter your name" required>
+  <input type="text" id="custAddress" placeholder="Enter delivery address" required>
+  <input type="text" id="custPhone" placeholder="Enter phone number" required>
+  <button onclick="checkLoginBeforeOrder()">📦 Place Order</button>
+  <p id="showOrderId"></p>
+
+  <hr>
+
+  <!-- Order Tracking -->
+  <footer>
+    <h2>🚚 Order Tracking</h2>
+    <input type="text" id="trackId" placeholder="Enter Order ID">
+    <button onclick="trackOrder()">Track</button>
+  </footer>
+
+  <!-- Login/Register Modal -->
+  <div id="overlay"></div>
+  <div id="authModal">
+    <h3 id="authTitle">Login</h3>
+
+    <div id="loginForm">
+      <input type="text" id="loginUser" placeholder="Username"><br>
+      <input type="password" id="loginPass" placeholder="Password"><br>
+      <button onclick="loginUser()">Login</button>
+      <p>Don't have account? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+
+    <div id="registerForm" style="display:none;">
+      <input type="text" id="newUser" placeholder="Username"><br>
+      <input type="password" id="newPass" placeholder="Password"><br>
+      <button onclick="registerUser()">Register</button>
+      <p>Already have account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+  </div>
+
+<script>
+  // 🔹 Simulated database
+  let users = [];
+  let loggedInUser = null;
+
+  function showAuthModal() {
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('authModal').style.display = 'block';
+    showLogin();
+  }
+
+  function closeAuthModal() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('authModal').style.display = 'none';
+  }
+
+  function showRegister() {
+    document.getElementById('registerForm').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('authTitle').innerText = 'Register';
+  }
+
+  function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('authTitle').innerText = 'Login';
+  }
+
+  function registerUser() {
+    let username = document.getElementById('newUser').value.trim();
+    let password = document.getElementById('newPass').value.trim();
+
+    if(username === "" || password === "") { alert("Enter valid details!"); return; }
+    if(users.find(u => u.username === username)) { alert("Username already exists!"); return; }
+
+    users.push({username, password});
+    alert("Registered successfully! Please login.");
+    showLogin();
+  }
+
+  function loginUser() {
+    let username = document.getElementById('loginUser').value.trim();
+    let password = document.getElementById('loginPass').value.trim();
+
+    let user = users.find(u => u.username === username && u.password === password);
+
+    if(user) {
+      loggedInUser = username;
+      alert("Login successful!");
+      closeAuthModal();
+    } else {
+      alert("Invalid credentials!");
+    }
+  }
+
+  // 🔹 Check login before placing order
+  function checkLoginBeforeOrder() {
+    if(!loggedInUser) {
+      alert("Please login/register first!");
+      showAuthModal();
+      return;
+    }
+    placeOrder();
+  }
+
+  // 🔹 Place order (your existing code)
+  function placeOrder() {
+    let name = document.getElementById("custName").value;
+    let address = document.getElementById("custAddress").value;
+    let phone = document.getElementById("custPhone").value;
+
+    if (!name || !address || !phone) {
+      alert("⚠️ Please fill all details!");
+      return;
+    }
+
+    let orderId = Math.floor(100000 + Math.random() * 900000);
+    localStorage.setItem("lastOrderId", orderId);
+
+    alert("✅ Thank you " + name + "! Your order has been placed.\nYour Order ID is: " + orderId);
+    document.getElementById("showOrderId").innerText = "Your Order ID: " + orderId;
+
+    // Clear form
+    document.getElementById("custName").value = "";
+    document.getElementById("custAddress").value = "";
+    document.getElementById("custPhone").value = "";
+  }
+
+  function trackOrder() {
+    let orderId = document.getElementById("trackId").value;
+    let savedOrderId = localStorage.getItem("lastOrderId");
+
+    if (!orderId) { alert("⚠️ Please enter Order ID!"); return; }
+
+    if (parseInt(orderId) === parseInt(savedOrderId)) {
+      alert("📦 Order " + orderId + " is being processed. It will be delivered soon!");
+    } else {
+      alert("⚠️ Invalid Order ID! Please check and try again.");
+    }
+  }
+</script>
+
+</body>
+</html>

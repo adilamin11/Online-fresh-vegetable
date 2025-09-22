@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment</title>
+  <style>
+    body {font-family: Arial, sans-serif; background: #f9f9f9;}
+    .container {width: 60%; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 8px #ccc;}
+    h2 {text-align: center;}
+    label {display: block; margin: 10px 0;}
+    button {padding: 10px 20px; background: blue; color: white; border: none; border-radius: 6px; cursor: pointer;}
+    button:hover {background: darkblue;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Select Payment Method</h2>
+    <label><input type="radio" name="payment" value="COD"> Cash on Delivery</label>
+    <label><input type="radio" name="payment" value="Card"> Credit/Debit Card</label>
+    <label><input type="radio" name="payment" value="UPI"> UPI</label>
+    <button onclick="confirmPayment()">Confirm Payment</button>
+  </div>
+
+  <script>
+  function confirmPayment(){
+    let method = document.querySelector('input[name="payment"]:checked');
+    if(!method){
+      alert("⚠ Please select a payment method!");
+      return;
+    }
+
+    alert("✅ Order placed successfully via " + method.value);
+
+    // Clear cart after order success
+    localStorage.removeItem("cart");
+
+    // Redirect to home
+    window.location.href = "home.html";
+  }
+  </script>
+</body>
+</html>

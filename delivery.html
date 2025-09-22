@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delivery Details</title>
+  <style>
+    body {font-family: Arial, sans-serif; background: #f9f9f9;}
+    .container {width: 60%; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 8px #ccc;}
+    h2 {text-align: center;}
+    input, textarea {width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px;}
+    button {padding: 10px 20px; background: green; color: white; border: none; border-radius: 6px; cursor: pointer;}
+    button:hover {background: darkgreen;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter Delivery Details</h2>
+    <input type="text" id="custName" placeholder="Enter your name" required>
+    <textarea id="custAddress" placeholder="Enter your address" required></textarea>
+    <input type="text" id="custPhone" placeholder="Enter phone number" required>
+    <button onclick="placeOrder()">📦 Place Order</button>
+  </div>
+
+  <script>
+  function placeOrder(){
+    let name = document.getElementById("custName").value.trim();
+    let address = document.getElementById("custAddress").value.trim();
+    let phone = document.getElementById("custPhone").value.trim();
+
+    if(!name || !address || !phone){
+      alert("⚠ Please fill all fields!");
+      return;
+    }
+
+    // Save delivery info
+    localStorage.setItem("custName", name);
+    localStorage.setItem("custAddress", address);
+    localStorage.setItem("custPhone", phone);
+
+    // ✅ Redirect to payment
+    window.location.href = "payment.html";
+  }
+  </script>
+  <script>
+function placeOrder(){
+  let name = document.getElementById("custName").value.trim();
+  let address = document.getElementById("custAddress").value.trim();
+  let phone = document.getElementById("custPhone").value.trim();
+
+  // ✅ Name validation: only alphabets + spaces allowed
+  let nameRegex = /^[A-Za-z ]+$/;
+  if(!nameRegex.test(name)){
+    alert("⚠ Name should contain only alphabets (no numbers or special characters).");
+    return;
+  }
+
+  // ✅ Address validation: not empty
+  if(!address){
+    alert("⚠ Please enter your address.");
+    return;
+  }
+
+  // ✅ Phone validation: only 10 digits
+  let phoneRegex = /^[0-9]{10}$/;
+  if(!phoneRegex.test(phone)){
+    alert("⚠ Phone number should be 10 digits.");
+    return;
+  }
+
+  // Save delivery info
+  localStorage.setItem("custName", name);
+  localStorage.setItem("custAddress", address);
+  localStorage.setItem("custPhone", phone);
+
+  // ✅ Redirect to payment
+  window.location.href = "payment.html";
+}
+</script>
+
+</body>
+</html>

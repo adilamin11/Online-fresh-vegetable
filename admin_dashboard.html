@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial; padding:20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: green; color: white; }
+    button { padding: 5px 10px; margin: 2px; }
+    input { padding: 6px; margin: 4px; }
+  </style>
+</head>
+<body>
+  <h2>🌱 Admin Dashboard</h2>
+
+  <input type="text" id="vegName" placeholder="Vegetable Name">
+  <input type="number" id="vegPrice" placeholder="Price (₹)">
+  <input type="number" id="vegQty" placeholder="Quantity (kg)">
+  <button onclick="addVegetable()">Add Vegetable</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Vegetable</th>
+        <th>Price (₹)</th>
+        <th>Quantity (kg)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="vegTable"></tbody>
+  </table>
+
+  <a href="home.html">➡ Go to Home</a>
+
+  <script>
+    let vegetables = JSON.parse(localStorage.getItem("vegetables")) || [];
+
+    function displayVegetables() {
+      let table = document.getElementById("vegTable");
+      table.innerHTML = "";
+      vegetables.forEach((veg, index) => {
+        table.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${veg.name}</td>
+            <td>₹${veg.price}</td>
+            <td>${veg.qty} kg</td>
+            <td>
+              <button onclick="deleteVegetable(${index})">❌ Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function addVegetable() {
+      let name = document.getElementById("vegName").value.trim();
+      let price = document.getElementById("vegPrice").value;
+      let qty = document.getElementById("vegQty").value;
+
+      if(name && price && qty) {
+        vegetables.push({name, price, qty});
+        localStorage.setItem("vegetables", JSON.stringify(vegetables));
+        displayVegetables();
+        document.getElementById("vegName").value = "";
+        document.getElementById("vegPrice").value = "";
+        document.getElementById("vegQty").value = "";
+      } else {
+        alert("⚠ Please enter all details");
+      }
+    }
+
+    function deleteVegetable(index) {
+      vegetables.splice(index, 1);
+      localStorage.setItem("vegetables", JSON.stringify(vegetables));
+      displayVegetables();
+    }
+
+    displayVegetables();
+  </script>
+</body>
+</html>

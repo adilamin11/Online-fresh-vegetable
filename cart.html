@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9;}
+    header {background: green; color: white; text-align: center; padding: 15px;}
+    nav {background: #228B22; padding: 10px; text-align: center;}
+    nav a {color: white; margin: 0 15px; text-decoration: none; font-weight: bold;}
+    nav a:hover {text-decoration: underline;}
+    .container {width: 80%; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 8px #ccc;}
+    h2 {text-align: center; margin-bottom: 20px;}
+    table {width: 100%; border-collapse: collapse; margin-bottom: 20px;}
+    table, th, td {border: 1px solid #ddd;}
+    th, td {padding: 12px; text-align: center;}
+    .total {font-weight: bold; text-align: right; margin-top: 10px; font-size: 18px;}
+    .form-section {margin-top: 20px;}
+    .form-section h3 {margin-bottom: 15px;}
+    .form-section input {width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px;}
+    button {padding: 10px 20px; background: #228B22; color: white; border: none; border-radius: 6px; cursor: pointer;}
+    button:hover {background: #1a6d1a;}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🛒 Your Shopping Cart</h1>
+</header>
+
+<nav>
+  <a href="home.html">Home</a>
+  <a href="menu.html">Menu</a>
+  <a href="category.html">Category</a>
+  <a href="cart.html">Cart</a>
+  <a href="login.html">Login</a>
+</nav>
+
+<div class="container">
+  <h2>Items in Cart</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="cartTableBody"></tbody>
+  </table>
+
+  <div class="total" id="totalAmount">Total: ₹0</div>
+  <!-- ✅ Proceed to Delivery -->
+<div style="text-align: right; margin-top: 20px;">
+  <button onclick="goToDelivery()">➡️ Proceed to Delivery</button>
+</div>
+
+<script>
+function goToDelivery() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length === 0){
+        alert("⚠ Your cart is empty!");
+        return;
+    }
+
+    // Cart save for delivery page
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // ✅ Go to delivery page
+    window.location.href = "delivery.html";
+}
+</script>
+
+  
+<script>
+  // Load cart items
+  function loadCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let table = document.getElementById("cartTableBody");
+    let total = 0;
+    table.innerHTML = "";
+
+    cart.forEach((item, index) => {
+      let row = document.createElement("tr");
+      row.innerHTML = 
+        <td>${item.name}</td>
+        <td>₹${item.price}</td>
+        <td><button onclick="removeItem(${index})">❌ Remove</button></td>
+      ;
+      table.appendChild(row);
+      total += parseFloat(item.price);
+    });
+
+    document.getElementById("totalAmount").innerText = "Total: ₹" + total;
+  }
+
+  // Remove item from cart
+  function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+  }
+
+  /
+
+    // Phone validation (10 digits)
+    let phoneRegex = /^[0-9]{10}$/;
+    if(!phoneRegex.test(phone)){
+      alert("⚠ Phone mus/ Place order
+  function placeOrder() {
+    let name = document.getElementById("custName").value.trim();
+    let address = document.getElementById("custAddress").value.trim();
+    let phone = document.getElementById("custPhone").value.trim();
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Validation
+    if(cart.length === 0){
+      alert("⚠ Your cart is empty!");
+      return;
+    }
+    if(!name || !address || !phone){
+      alert("⚠ Please fill all delivery details!");
+      return;
+    }
+
+    // Name validation (letters and spaces only)
+    let nameRegex = /^[A-Za-z\s]+$/;
+    if(!nameRegex.test(name)){
+      alert("⚠ Name can contain only letters and spaces!");
+      return;
+    }t be 10 digits!");
+      return;
+    }
+
+    // Save order (optional)
+    localStorage.setItem("custName", name);
+    localStorage.setItem("custAddress", address);
+    localStorage.setItem("custPhone", phone);
+    localStorage.setItem("orderId", "ORD"+Math.floor(Math.random()*10000));
+
+    alert("✅ Order placed successfully!\n\nName: " + name + "\nAddress: " + address + "\nPhone: " + phone);
+
+    // Clear cart
+    localStorage.removeItem("cart");
+    loadCart();
+    document.getElementById("custName").value = "";
+    document.getElementById("custAddress").value = "";
+    document.getElementById("custPhone").value = "";
+  }
+
+  window.onload = loadCart;
+</script>
+
+
+<script>
+function loadCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let table = document.getElementById("cartTableBody");
+    let total = 0;
+    table.innerHTML = "";
+
+    cart.forEach((item, index) => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>₹${item.price}</td>
+            <td><button onclick="removeItem(${index})">❌ Remove</button></td>
+        `;
+        table.appendChild(row);
+        total += item.price;
+    });
+
+    document.getElementById("totalAmount").innerText = "Total: ₹" + total;
+}
+
+function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+}
+
+window.onload = loadCart;
+</script>
+
+
+
+
+<script>
+function loadCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let table = document.getElementById("cartTableBody");
+    let total = 0;
+    table.innerHTML = "";
+
+    cart.forEach((item, index) => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>₹${item.price}</td>
+            <td><button onclick="removeItem(${index})">❌ Remove</button></td>
+        `;
+        table.appendChild(row);
+        total += item.price;
+    });
+
+    document.getElementById("totalAmount").innerText = "Total: ₹" + total;
+}
+
+function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+}
+
+// ✅ Place order → go to delivery page
+function placeOrder() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length === 0){
+        alert("⚠ Your cart is empty!");
+        return;
+    }
+
+    // Save cart once more before redirect (optional)
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Clear cart immediately
+    localStorage.removeItem("cart");
+
+    // Redirect to delivery page
+    window.location.href = "delivery.html";
+}
+
+window.onload = loadCart;
+
+
+</script>
+<script>
+function placeOrder() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length === 0){
+        alert("⚠ Your cart is empty!");
+        return;
+    }
+
+    // Cart save कर दो ताकि delivery page में दिखे
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Redirect to Delivery page
+    window.location.href = "delivery.html";
+}
+</script>
+<script>
+if(localStorage.getItem("isLoggedIn") !== "true"){
+  alert("⚠ Please login first!");
+  window.location.href = "login.html";
+}
+</script>
+
+
+</body>
+</html>

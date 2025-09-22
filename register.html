@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fresh Vegetables Online - Register</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: green; }
+        input { padding: 8px; margin: 5px 0; width: 250px; }
+        button { padding: 10px 20px; margin: 10px 0; cursor: pointer; }
+        .form-section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Fresh Vegetables Store</h1>
+
+    <!-- Initial Auth Section -->
+    <div id="authSection">
+        <button onclick="showRegister()">Register</button>
+        <button onclick="showLogin()">Login</button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" class="form-section" style="display:none;">
+        <h3>Register</h3>
+        <input type="text" id="newUser" placeholder="Username"><br>
+        <input type="password" id="newPass" placeholder="Password"><br>
+        <button onclick="registerUser()">Submit</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm" class="form-section" style="display:none;">
+        <h3>Login</h3>
+        <input type="text" id="loginUser" placeholder="Username"><br>
+        <input type="password" id="loginPass" placeholder="Password"><br>
+        <button onclick="loginUser()">Submit</button>
+    </div>
+
+    <!-- Checkout Form -->
+    <div id="checkoutSection" class="form-section" style="display:none;">
+        <h3>Enter Delivery Details</h3>
+        <input type="text" id="custName" placeholder="Full Name"><br>
+        <input type="text" id="custAddress" placeholder="Address"><br>
+        <input type="text" id="custPhone" placeholder="Phone Number"><br>
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <script>
+        // Simulated database
+        let users = [];
+        let loggedIn = false;
+
+        function showRegister() {
+            document.getElementById('registerForm').style.display = "block";
+            document.getElementById('loginForm').style.display = "none";
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = "block";
+            document.getElementById('registerForm').style.display = "none";
+        }
+
+        function registerUser() {
+            let username = document.getElementById('newUser').value.trim();
+            let password = document.getElementById('newPass').value.trim();
+
+            if(username === "" || password === "") {
+                alert("Please enter valid username and password!");
+                return;
+            }
+
+            // Check if username already exists
+            let exists = users.find(u => u.username === username);
+            if(exists) {
+                alert("Username already taken! Try another.");
+                return;
+            }
+
+            users.push({username: username, password: password});
+            alert("Registration successful! Please login.");
+            showLogin();
+        }
+
+        function loginUser() {
+            let username = document.getElementById('loginUser').value.trim();
+            let password = document.getElementById('loginPass').value.trim();
+
+            let user = users.find(u => u.username === username && u.password === password);
+
+            if(user) {
+                alert("Login successful!");
+                loggedIn = true;
+                document.getElementById('authSection').style.display = "none";
+                document.getElementById('loginForm').style.display = "none";
+                document.getElementById('checkoutSection').style.display = "block";
+            } else {
+                alert("Invalid credentials! Please try again.");
+            }
+        }
+
+        function placeOrder() {
+            if(!loggedIn) {
+                alert("Please login first!");
+                return;
+            }
+
+            let name = document.getElementById('custName').value.trim();
+            let address = document.getElementById('custAddress').value.trim();
+            let phone = document.getElementById('custPhone').value.trim();
+
+            if(name === "" || address === "" || phone === "") {
+                alert("Please fill all details!");
+                return;
+            }
+
+            alert("Order placed successfully!\n\nName: " + name + "\nAddress: " + address + "\nPhone: " + phone);
+
+            // Optionally, reset checkout form
+            document.getElementById('custName').value = "";
+            document.getElementById('custAddress').value = "";
+            document.getElementById('custPhone').value = "";
+        }
+    </script>
+</body>
+</html>
