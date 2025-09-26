@@ -21,21 +21,41 @@
   </div>
 
   <script>
-  function login(){
-    let user = document.getElementById("username").value.trim();
-    let pass = document.getElementById("password").value.trim();
+ async function loginUser() {
+    let username = document.getElementById('loginUser').value.trim();
+    let password = document.getElementById('loginPass').value.trim();
 
-    let savedUser = localStorage.getItem("username");
-    let savedPass = localStorage.getItem("password");
-
-    if(user === savedUser && pass === savedPass){
-      alert("✅ Login successful!");
-      localStorage.setItem("isLoggedIn", "true");
-      window.location.href = "home.html"; // redirect to home
-    } else {
-      alert("❌ Invalid credentials!");
+    if (!username || !password) {
+        alert("Enter both username and password");
+        return;
     }
-  }
-  </script>
+
+    try {
+        const res = await fetch("http://localhost:5000/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+            // Store token for future API calls
+            localStorage.setItem("token", data.token);
+
+            alert("Login successful!");
+            // Hide auth section, show checkout
+            document.getElementById("authSection").style.display = "none";
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("checkoutSection").style.display = "block";
+        } else {
+            alert(data.message); // Show error from backend
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error logging in. Please try again.");
+    }
+}
+</script>
 </body>
 </html>

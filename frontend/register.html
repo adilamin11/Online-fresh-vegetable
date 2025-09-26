@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fresh Vegetables Online - Register</title>
+    <title>Fresh Vegetables Online</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         h1 { color: green; }
@@ -45,9 +45,7 @@
     </div>
 
     <script>
-        // Simulated database
-        let users = [];
-        let loggedIn = false;
+        const API_URL = "http://localhost:5000/api"; // backend URL
 
         function showRegister() {
             document.getElementById('registerForm').style.display = "block";
@@ -59,65 +57,92 @@
             document.getElementById('registerForm').style.display = "none";
         }
 
-        function registerUser() {
+        async function registerUser() {
             let username = document.getElementById('newUser').value.trim();
             let password = document.getElementById('newPass').value.trim();
 
-            if(username === "" || password === "") {
-                alert("Please enter valid username and password!");
+            if (!username || !password) {
+                alert("Please enter both username and password");
                 return;
             }
 
-            // Check if username already exists
-            let exists = users.find(u => u.username === username);
-            if(exists) {
-                alert("Username already taken! Try another.");
-                return;
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if (res.ok) showLogin();
+            } catch (err) {
+                console.error(err);
+                alert("Error registering user");
             }
-
-            users.push({username: username, password: password});
-            alert("Registration successful! Please login.");
-            showLogin();
         }
 
-        function loginUser() {
+        async function loginUser() {
             let username = document.getElementById('loginUser').value.trim();
             let password = document.getElementById('loginPass').value.trim();
 
-            let user = users.find(u => u.username === username && u.password === password);
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
 
-            if(user) {
-                alert("Login successful!");
-                loggedIn = true;
-                document.getElementById('authSection').style.display = "none";
-                document.getElementById('loginForm').style.display = "none";
-                document.getElementById('checkoutSection').style.display = "block";
-            } else {
-                alert("Invalid credentials! Please try again.");
+                if (res.ok && data.token) {
+                    localStorage.setItem('token', data.token);
+                    alert("Login successful!");
+                    document.getElementById('authSection').style.display = "none";
+                    document.getElementById('loginForm').style.display = "none";
+                    document.getElementById('checkoutSection').style.display = "block";
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error logging in");
             }
         }
 
-        function placeOrder() {
-            if(!loggedIn) {
+        async function placeOrder() {
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const token = localStorage.getItem('token');
+
+            if (!name || !address || !phone) {
+                alert("Please fill all fields");
+                return;
+            }
+            if (!token) {
                 alert("Please login first!");
                 return;
             }
 
-            let name = document.getElementById('custName').value.trim();
-            let address = document.getElementById('custAddress').value.trim();
-            let phone = document.getElementById('custPhone').value.trim();
-
-            if(name === "" || address === "" || phone === "") {
-                alert("Please fill all details!");
-                return;
+            try {
+                const res = await fetch(`${API_URL}/order`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify({ name, address, phone })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if (res.ok) {
+                    document.getElementById('custName').value = "";
+                    document.getElementById('custAddress').value = "";
+                    document.getElementById('custPhone').value = "";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error placing order");
             }
-
-            alert("Order placed successfully!\n\nName: " + name + "\nAddress: " + address + "\nPhone: " + phone);
-
-            // Optionally, reset checkout form
-            document.getElementById('custName').value = "";
-            document.getElementById('custAddress').value = "";
-            document.getElementById('custPhone').value = "";
         }
     </script>
 </body>
