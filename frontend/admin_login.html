@@ -63,13 +63,11 @@
       let pass = document.getElementById("password").value;
 
       if(user === "admin" && pass === "admin123") {
-        alert("Login Successful!");
-        window.location.href = "dashboard.html"; // ✅ Dashboard open
-        return false;
-      } else {
-        alert("Invalid Username or Password");
-        return false;
-      }
+  alert("Login Successful!");
+  window.location.href = "admin_dashboard.html"; // ✅ redirect works
+  return false;
+}
+
     }
   </script>
 </body>

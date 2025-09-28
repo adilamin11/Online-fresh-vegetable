@@ -6,13 +6,15 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const app = express();
+// const app = express();
 app.use(cors());
+app.use(express.json());
+
 app.use(bodyParser.json());
 
 // MongoDB connection
 mongoose
-  .connect('mongodb://localhost:27017/vegstore' ,{
+  .connect('mongodb+srv://zaidadil:zaidadil11@cluster0.tqsolpt.mongodb.net/' ,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -93,7 +95,64 @@ app.post("/api/order", authMiddleware, async (req, res) => {
   await order.save();
   res.json({ message: "Order placed successfully" });
 });
+const express = require("express");
+const cors = require("cors");
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// backend/server.js
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/shopcart", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Cart Schema
+const cartSchema = new mongoose.Schema({
+  name: String,
+  price: Number,
+});
+const Cart = mongoose.model("Cart", cartSchema);
+
+// Routes
+// Get all cart items
+app.get("/cart", async (req, res) => {
+  const items = await Cart.find();
+  res.json(items);
+});
+
+// Add item to cart
+app.post("/cart", async (req, res) => {
+  const { name, price } = req.body;
+  const newItem = new Cart({ name, price });
+  await newItem.save();
+  res.json({ message: "Item added", item: newItem });
+});
+
+// Remove item by ID
+app.delete("/cart/:id", async (req, res) => {
+  await Cart.findByIdAndDelete(req.params.id);
+  res.json({ message: "Item removed" });
+});
+
+// Clear cart
+app.delete("/cart", async (req, res) => {
+  await Cart.deleteMany();
+  res.json({ message: "Cart cleared" });
+});
+
+
 
 // Start server
+app.use(express.static("frontend"));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

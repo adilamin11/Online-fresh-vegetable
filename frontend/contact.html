@@ -1,30 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Contact Us</title>
+  <meta charset="UTF-8">
+  <title>Contact Us - Online Fresh Vegetable Shop</title>
   <style>
-    body { font-family: Arial; background: #f4f4f4; padding: 30px; }
-    .box { background: #fff; max-width: 500px; margin: auto; padding: 20px; border-radius: 8px; }
-    input, textarea, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; }
-    button { background: #007BFF; color: white; font-weight: bold; cursor: pointer; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: green; color: white; padding: 15px; text-align: center; }
+    nav { background: #228B22; padding: 10px; text-align: center; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .container { max-width: 700px; margin: 30px auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 0 8px #ccc; }
+    h2 { text-align: center; margin-bottom: 15px; color: green; }
+    p { text-align: center; margin: 5px 0; }
+    .info { margin: 20px 0; text-align: center; }
+    input, textarea, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+    textarea { resize: none; }
+    button { background: #228B22; color: white; font-weight: bold; cursor: pointer; border: none; }
+    button:hover { background: #1a6d1a; }
+    footer { margin-top: 40px; text-align: center; padding: 15px; background: #eee; font-size: 14px; color: #555; }
   </style>
 </head>
 <body>
-  <div class="box">
+
+  <!-- Header -->
+  <header>
+    <h1>🥦 Online Fresh Vegetable Shop</h1>
+  </header>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="category.html">Category</a>
+    <a href="cart.html">Cart</a>
+    <a href="about.html">About Us</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Contact Content -->
+  <div class="container">
     <h2>📞 Contact Us</h2>
-    <p>Email: support@onlinefreshveg.com</p>
-    <p>Phone: +91-9876543210</p>
-    <p>Address: Pune, Maharashtra, India</p>
+
+    <div class="info">
+      <p><strong>Email:</strong> support@onlinefreshveg.com</p>
+      <p><strong>Phone:</strong> +91-9876543210</p>
+      <p><strong>Address:</strong> Pune, Maharashtra, India</p>
+    </div>
 
     <h3>Send us a message</h3>
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea placeholder="Your Message" rows="5" required></textarea>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
       <button type="submit">Send Message</button>
     </form>
   </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Online Fresh Vegetable Shop. All Rights Reserved.
+  </footer>
+
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      let name = document.getElementById("name").value;
+      let email = document.getElementById("email").value;
+      let message = document.getElementById("message").value;
+
+      alert(`✅ Your Message Sent!\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+
+      // Reset form
+      document.getElementById("contactForm").reset();
+    });
+  </script>
+
 </body>
 </html>
-
